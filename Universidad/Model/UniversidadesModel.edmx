@@ -1,0 +1,422 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="UniversidadesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Alumnos">
+          <Key>
+            <PropertyRef Name="IdAlumno" />
+          </Key>
+          <Property Name="IdAlumno" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="200" />
+          <Property Name="Identificacion" Type="varchar" MaxLength="15" />
+          <Property Name="FechaCreacion" Type="datetime" />
+          <Property Name="Estado" Type="bit" />
+        </EntityType>
+        <EntityType Name="LogTransacciones">
+          <Key>
+            <PropertyRef Name="IdLog" />
+          </Key>
+          <Property Name="IdLog" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar(max)" />
+          <Property Name="Fecha" Type="datetime" />
+          <Property Name="IdTransaccion" Type="smallint" />
+        </EntityType>
+        <EntityType Name="MateriaAlumnos">
+          <Key>
+            <PropertyRef Name="IdMateriaAlumno" />
+          </Key>
+          <Property Name="IdMateriaAlumno" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdAlumno" Type="int" />
+          <Property Name="IdMateria" Type="int" />
+          <Property Name="Nota" Type="decimal" Precision="1" Scale="1" />
+        </EntityType>
+        <EntityType Name="Materias">
+          <Key>
+            <PropertyRef Name="IdMateria" />
+          </Key>
+          <Property Name="IdMateria" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="100" />
+          <Property Name="IdProfesor" Type="int" />
+          <Property Name="IdSalon" Type="int" />
+          <Property Name="Estado" Type="bit" />
+        </EntityType>
+        <EntityType Name="Profesores">
+          <Key>
+            <PropertyRef Name="IdProfesor" />
+          </Key>
+          <Property Name="IdProfesor" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombres" Type="varchar" MaxLength="100" />
+          <Property Name="Identificacion" Type="varchar" MaxLength="15" />
+          <Property Name="Estado" Type="bit" />
+        </EntityType>
+        <EntityType Name="Salon">
+          <Key>
+            <PropertyRef Name="IdSalon" />
+          </Key>
+          <Property Name="IdSalon" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="100" />
+          <Property Name="Estado" Type="bit" />
+        </EntityType>
+        <EntityType Name="TipoTransaccion">
+          <Key>
+            <PropertyRef Name="IdTransaccion" />
+          </Key>
+          <Property Name="IdTransaccion" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="70" />
+        </EntityType>
+        <Association Name="FK_LogTransacciones_TipoTransaccion">
+          <End Role="TipoTransaccion" Type="Self.TipoTransaccion" Multiplicity="0..1" />
+          <End Role="LogTransacciones" Type="Self.LogTransacciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoTransaccion">
+              <PropertyRef Name="IdTransaccion" />
+            </Principal>
+            <Dependent Role="LogTransacciones">
+              <PropertyRef Name="IdTransaccion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MateriaAlumnos_Alumnos">
+          <End Role="Alumnos" Type="Self.Alumnos" Multiplicity="0..1" />
+          <End Role="MateriaAlumnos" Type="Self.MateriaAlumnos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Alumnos">
+              <PropertyRef Name="IdAlumno" />
+            </Principal>
+            <Dependent Role="MateriaAlumnos">
+              <PropertyRef Name="IdAlumno" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MateriaAlumnos_Materias">
+          <End Role="Materias" Type="Self.Materias" Multiplicity="0..1" />
+          <End Role="MateriaAlumnos" Type="Self.MateriaAlumnos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Materias">
+              <PropertyRef Name="IdMateria" />
+            </Principal>
+            <Dependent Role="MateriaAlumnos">
+              <PropertyRef Name="IdMateria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Materias_Profesores">
+          <End Role="Profesores" Type="Self.Profesores" Multiplicity="0..1" />
+          <End Role="Materias" Type="Self.Materias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profesores">
+              <PropertyRef Name="IdProfesor" />
+            </Principal>
+            <Dependent Role="Materias">
+              <PropertyRef Name="IdProfesor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Materias_Salon">
+          <End Role="Salon" Type="Self.Salon" Multiplicity="0..1" />
+          <End Role="Materias" Type="Self.Materias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Salon">
+              <PropertyRef Name="IdSalon" />
+            </Principal>
+            <Dependent Role="Materias">
+              <PropertyRef Name="IdSalon" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="UniversidadesModelStoreContainer">
+          <EntitySet Name="Alumnos" EntityType="Self.Alumnos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LogTransacciones" EntityType="Self.LogTransacciones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MateriaAlumnos" EntityType="Self.MateriaAlumnos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Materias" EntityType="Self.Materias" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Profesores" EntityType="Self.Profesores" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Salon" EntityType="Self.Salon" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TipoTransaccion" EntityType="Self.TipoTransaccion" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_LogTransacciones_TipoTransaccion" Association="Self.FK_LogTransacciones_TipoTransaccion">
+            <End Role="TipoTransaccion" EntitySet="TipoTransaccion" />
+            <End Role="LogTransacciones" EntitySet="LogTransacciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MateriaAlumnos_Alumnos" Association="Self.FK_MateriaAlumnos_Alumnos">
+            <End Role="Alumnos" EntitySet="Alumnos" />
+            <End Role="MateriaAlumnos" EntitySet="MateriaAlumnos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MateriaAlumnos_Materias" Association="Self.FK_MateriaAlumnos_Materias">
+            <End Role="Materias" EntitySet="Materias" />
+            <End Role="MateriaAlumnos" EntitySet="MateriaAlumnos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Materias_Profesores" Association="Self.FK_Materias_Profesores">
+            <End Role="Profesores" EntitySet="Profesores" />
+            <End Role="Materias" EntitySet="Materias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Materias_Salon" Association="Self.FK_Materias_Salon">
+            <End Role="Salon" EntitySet="Salon" />
+            <End Role="Materias" EntitySet="Materias" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="UniversidadesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="UniversidadesEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Alumnos" EntityType="UniversidadesModel.Alumnos" />
+          <EntitySet Name="LogTransacciones" EntityType="UniversidadesModel.LogTransacciones" />
+          <EntitySet Name="MateriaAlumnos" EntityType="UniversidadesModel.MateriaAlumnos" />
+          <EntitySet Name="Materias" EntityType="UniversidadesModel.Materias" />
+          <EntitySet Name="Profesores" EntityType="UniversidadesModel.Profesores" />
+          <EntitySet Name="Salon" EntityType="UniversidadesModel.Salon" />
+          <EntitySet Name="TipoTransaccion" EntityType="UniversidadesModel.TipoTransaccion" />
+          <AssociationSet Name="FK_MateriaAlumnos_Alumnos" Association="UniversidadesModel.FK_MateriaAlumnos_Alumnos">
+            <End Role="Alumnos" EntitySet="Alumnos" />
+            <End Role="MateriaAlumnos" EntitySet="MateriaAlumnos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LogTransacciones_TipoTransaccion" Association="UniversidadesModel.FK_LogTransacciones_TipoTransaccion">
+            <End Role="TipoTransaccion" EntitySet="TipoTransaccion" />
+            <End Role="LogTransacciones" EntitySet="LogTransacciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MateriaAlumnos_Materias" Association="UniversidadesModel.FK_MateriaAlumnos_Materias">
+            <End Role="Materias" EntitySet="Materias" />
+            <End Role="MateriaAlumnos" EntitySet="MateriaAlumnos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Materias_Profesores" Association="UniversidadesModel.FK_Materias_Profesores">
+            <End Role="Profesores" EntitySet="Profesores" />
+            <End Role="Materias" EntitySet="Materias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Materias_Salon" Association="UniversidadesModel.FK_Materias_Salon">
+            <End Role="Salon" EntitySet="Salon" />
+            <End Role="Materias" EntitySet="Materias" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Alumnos">
+          <Key>
+            <PropertyRef Name="IdAlumno" />
+          </Key>
+          <Property Name="IdAlumno" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Identificacion" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="FechaCreacion" Type="DateTime" Precision="3" />
+          <Property Name="Estado" Type="Boolean" />
+          <NavigationProperty Name="MateriaAlumnos" Relationship="UniversidadesModel.FK_MateriaAlumnos_Alumnos" FromRole="Alumnos" ToRole="MateriaAlumnos" />
+        </EntityType>
+        <EntityType Name="LogTransacciones">
+          <Key>
+            <PropertyRef Name="IdLog" />
+          </Key>
+          <Property Name="IdLog" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Fecha" Type="DateTime" Precision="3" />
+          <Property Name="IdTransaccion" Type="Int16" />
+          <NavigationProperty Name="TipoTransaccion" Relationship="UniversidadesModel.FK_LogTransacciones_TipoTransaccion" FromRole="LogTransacciones" ToRole="TipoTransaccion" />
+        </EntityType>
+        <EntityType Name="MateriaAlumnos">
+          <Key>
+            <PropertyRef Name="IdMateriaAlumno" />
+          </Key>
+          <Property Name="IdMateriaAlumno" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdAlumno" Type="Int32" />
+          <Property Name="IdMateria" Type="Int32" />
+          <Property Name="Nota" Type="Decimal" Precision="1" Scale="1" />
+          <NavigationProperty Name="Alumnos" Relationship="UniversidadesModel.FK_MateriaAlumnos_Alumnos" FromRole="MateriaAlumnos" ToRole="Alumnos" />
+          <NavigationProperty Name="Materias" Relationship="UniversidadesModel.FK_MateriaAlumnos_Materias" FromRole="MateriaAlumnos" ToRole="Materias" />
+        </EntityType>
+        <EntityType Name="Materias">
+          <Key>
+            <PropertyRef Name="IdMateria" />
+          </Key>
+          <Property Name="IdMateria" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IdProfesor" Type="Int32" />
+          <Property Name="IdSalon" Type="Int32" />
+          <Property Name="Estado" Type="Boolean" />
+          <NavigationProperty Name="MateriaAlumnos" Relationship="UniversidadesModel.FK_MateriaAlumnos_Materias" FromRole="Materias" ToRole="MateriaAlumnos" />
+          <NavigationProperty Name="Profesores" Relationship="UniversidadesModel.FK_Materias_Profesores" FromRole="Materias" ToRole="Profesores" />
+          <NavigationProperty Name="Salon" Relationship="UniversidadesModel.FK_Materias_Salon" FromRole="Materias" ToRole="Salon" />
+        </EntityType>
+        <EntityType Name="Profesores">
+          <Key>
+            <PropertyRef Name="IdProfesor" />
+          </Key>
+          <Property Name="IdProfesor" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombres" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Identificacion" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Estado" Type="Boolean" />
+          <NavigationProperty Name="Materias" Relationship="UniversidadesModel.FK_Materias_Profesores" FromRole="Profesores" ToRole="Materias" />
+        </EntityType>
+        <EntityType Name="Salon">
+          <Key>
+            <PropertyRef Name="IdSalon" />
+          </Key>
+          <Property Name="IdSalon" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Estado" Type="Boolean" />
+          <NavigationProperty Name="Materias" Relationship="UniversidadesModel.FK_Materias_Salon" FromRole="Salon" ToRole="Materias" />
+        </EntityType>
+        <EntityType Name="TipoTransaccion">
+          <Key>
+            <PropertyRef Name="IdTransaccion" />
+          </Key>
+          <Property Name="IdTransaccion" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descripcion" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="LogTransacciones" Relationship="UniversidadesModel.FK_LogTransacciones_TipoTransaccion" FromRole="TipoTransaccion" ToRole="LogTransacciones" />
+        </EntityType>
+        <Association Name="FK_MateriaAlumnos_Alumnos">
+          <End Type="UniversidadesModel.Alumnos" Role="Alumnos" Multiplicity="0..1" />
+          <End Type="UniversidadesModel.MateriaAlumnos" Role="MateriaAlumnos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Alumnos">
+              <PropertyRef Name="IdAlumno" />
+            </Principal>
+            <Dependent Role="MateriaAlumnos">
+              <PropertyRef Name="IdAlumno" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LogTransacciones_TipoTransaccion">
+          <End Type="UniversidadesModel.TipoTransaccion" Role="TipoTransaccion" Multiplicity="0..1" />
+          <End Type="UniversidadesModel.LogTransacciones" Role="LogTransacciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoTransaccion">
+              <PropertyRef Name="IdTransaccion" />
+            </Principal>
+            <Dependent Role="LogTransacciones">
+              <PropertyRef Name="IdTransaccion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MateriaAlumnos_Materias">
+          <End Type="UniversidadesModel.Materias" Role="Materias" Multiplicity="0..1" />
+          <End Type="UniversidadesModel.MateriaAlumnos" Role="MateriaAlumnos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Materias">
+              <PropertyRef Name="IdMateria" />
+            </Principal>
+            <Dependent Role="MateriaAlumnos">
+              <PropertyRef Name="IdMateria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Materias_Profesores">
+          <End Type="UniversidadesModel.Profesores" Role="Profesores" Multiplicity="0..1" />
+          <End Type="UniversidadesModel.Materias" Role="Materias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profesores">
+              <PropertyRef Name="IdProfesor" />
+            </Principal>
+            <Dependent Role="Materias">
+              <PropertyRef Name="IdProfesor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Materias_Salon">
+          <End Type="UniversidadesModel.Salon" Role="Salon" Multiplicity="0..1" />
+          <End Type="UniversidadesModel.Materias" Role="Materias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Salon">
+              <PropertyRef Name="IdSalon" />
+            </Principal>
+            <Dependent Role="Materias">
+              <PropertyRef Name="IdSalon" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="UniversidadesModelStoreContainer" CdmEntityContainer="UniversidadesEntities">
+          <EntitySetMapping Name="Alumnos">
+            <EntityTypeMapping TypeName="UniversidadesModel.Alumnos">
+              <MappingFragment StoreEntitySet="Alumnos">
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+                <ScalarProperty Name="Identificacion" ColumnName="Identificacion" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdAlumno" ColumnName="IdAlumno" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LogTransacciones">
+            <EntityTypeMapping TypeName="UniversidadesModel.LogTransacciones">
+              <MappingFragment StoreEntitySet="LogTransacciones">
+                <ScalarProperty Name="IdTransaccion" ColumnName="IdTransaccion" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="IdLog" ColumnName="IdLog" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MateriaAlumnos">
+            <EntityTypeMapping TypeName="UniversidadesModel.MateriaAlumnos">
+              <MappingFragment StoreEntitySet="MateriaAlumnos">
+                <ScalarProperty Name="Nota" ColumnName="Nota" />
+                <ScalarProperty Name="IdMateria" ColumnName="IdMateria" />
+                <ScalarProperty Name="IdAlumno" ColumnName="IdAlumno" />
+                <ScalarProperty Name="IdMateriaAlumno" ColumnName="IdMateriaAlumno" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Materias">
+            <EntityTypeMapping TypeName="UniversidadesModel.Materias">
+              <MappingFragment StoreEntitySet="Materias">
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="IdSalon" ColumnName="IdSalon" />
+                <ScalarProperty Name="IdProfesor" ColumnName="IdProfesor" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="IdMateria" ColumnName="IdMateria" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Profesores">
+            <EntityTypeMapping TypeName="UniversidadesModel.Profesores">
+              <MappingFragment StoreEntitySet="Profesores">
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Identificacion" ColumnName="Identificacion" />
+                <ScalarProperty Name="Nombres" ColumnName="Nombres" />
+                <ScalarProperty Name="IdProfesor" ColumnName="IdProfesor" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Salon">
+            <EntityTypeMapping TypeName="UniversidadesModel.Salon">
+              <MappingFragment StoreEntitySet="Salon">
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="IdSalon" ColumnName="IdSalon" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TipoTransaccion">
+            <EntityTypeMapping TypeName="UniversidadesModel.TipoTransaccion">
+              <MappingFragment StoreEntitySet="TipoTransaccion">
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="IdTransaccion" ColumnName="IdTransaccion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
